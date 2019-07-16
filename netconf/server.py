@@ -278,7 +278,7 @@ class NetconfServerSession(base.NetconfSession):
             reply.extend(rpc_reply)
         ucode = etree.tounicode(reply, pretty_print=True)
         if self.debug:
-            logger.debug("%s: Sending RPC-Reply: %s", str(self), str(ucode))
+            logger.debug("%s: Sending RPC-Reply:\n%s", str(self), str(ucode))
         self.send_message(ucode)
 
     def _rpc_not_implemented(self, unused_session, rpc, *unused_params):
@@ -299,7 +299,9 @@ class NetconfServerSession(base.NetconfSession):
         if not self.session_open:
             return
 
-        # Any error with XML encoding here is going to cause a session close
+        msg = msg.replace('\n','').replace('\r','')
+
+       # Any error with XML encoding here is going to cause a session close
         # Technically we should be able to return malformed message I think.
         try:
             tree = etree.parse(io.BytesIO(msg.encode('utf-8')))
@@ -308,6 +310,9 @@ class NetconfServerSession(base.NetconfSession):
         except etree.XMLSyntaxError:
             logger.warning("Closing session due to malformed message")
             raise ncerror.SessionError(msg, "Invalid XML from client.")
+
+        if self.debug and msg.find('message-id="-1"')==-1:
+            logger.debug("%s: Recieved RPC message:\n%s", str(self), str(etree.tounicode(tree, pretty_print=True)))
 
         rpcs = tree.xpath("/nc:rpc", namespaces=NSMAP)
         if not rpcs:
