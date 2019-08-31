@@ -42,3 +42,4 @@ def qmap(key):
 
 # Add base spec namespace
 nsmap_add('nc', "urn:ietf:params:xml:ns:netconf:base:1.0")
+nsmap_add('ncEvent', 'urn:ietf:params:xml:ns:netconf:notification:1.0')

@@ -299,7 +299,7 @@ class NetconfServerSession(base.NetconfSession):
         if not self.session_open:
             return
 
-        msg = msg.replace('\n','').replace('\r','')
+        msg = msg.replace('\n','').replace('\r','').replace('\t','')
 
        # Any error with XML encoding here is going to cause a session close
         # Technically we should be able to return malformed message I think.

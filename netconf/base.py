@@ -291,7 +291,8 @@ class NetconfSession(object):
             logger.info("Dropping message b/c no connection stream (%d): %s", len(msg), msg)
             return
         if self.debug:
-            logger.debug("Sending message (%d): %s", len(msg), msg)
+            # logger.debug("Sending message (%d): %s", len(msg), msg)
+            logger.debug("Sending message (%d)", len(msg))
         pkt_stream.send_pdu(XML_HEADER + msg, self.new_framing)
 
     def _receive_message(self):
